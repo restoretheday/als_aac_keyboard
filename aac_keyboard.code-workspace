@@ -1,0 +1,13 @@
+{
+    "settings":  {
+                     "files.exclude":  {
+                                           "**/build":  true,
+                                           "**/.dart_tool":  true
+                                       }
+                 },
+    "folders":  [
+      {
+        "path": "."
+      }
+    ]
+}

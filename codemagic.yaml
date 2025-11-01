@@ -1,0 +1,36 @@
+workflows:
+  ios_release:
+    name: iOS Release
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+          source: true
+    scripts:
+      - name: Flutter version
+        script: flutter --version
+      - name: Fetch dependencies
+        script: flutter pub get
+      - name: Tests
+        script: flutter test --no-pub
+      - name: Build IPA (unsigned)
+        script: flutter build ipa --release --no-tree-shake-icons
+      # If using Codemagic automatic code signing, they will sign the app post build
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - build/**/outputs/**/*.apk
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
+        notify:
+          success: true
+          failure: true
