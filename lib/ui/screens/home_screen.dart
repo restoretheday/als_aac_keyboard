@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
+      backgroundColor: scheme.background,
       body: Stack(
         children: [
           AnimatedBuilder(
@@ -72,10 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(height: 12),
                           Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                             decoration: BoxDecoration(
                               color: scheme.secondaryContainer,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: scheme.primary.withOpacity(0.15),
+                                width: 1,
+                              ),
                             ),
                             child: PredictiveBar(
                               predictions: appState.predictions,
@@ -182,22 +187,31 @@ class _MessageComposer extends StatelessWidget {
     ButtonStyle filled(Color bg, Color fg) => ElevatedButton.styleFrom(
           backgroundColor: bg,
           foregroundColor: fg,
-          minimumSize: const Size(120, 56),
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          minimumSize: const Size(120, 48),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          elevation: 0,
         );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade400),
-            borderRadius: BorderRadius.circular(8),
+            color: scheme.surface,
+            border: Border.all(color: scheme.primary.withOpacity(0.2), width: 1),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             text,
-            style: const TextStyle(fontSize: 28),
+            style: TextStyle(
+              fontSize: 28,
+              color: scheme.onSurface,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
         const SizedBox(height: 8),
