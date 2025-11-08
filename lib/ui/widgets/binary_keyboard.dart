@@ -48,8 +48,8 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
     final canRepeat = widget.lastChar.isNotEmpty;
 
     return Container(
-      color: scheme.surface,
-      padding: const EdgeInsets.all(12),
+      color: scheme.background,
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           Row(
@@ -67,17 +67,15 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: scheme.error,
                     foregroundColor: scheme.onError,
-                    minimumSize: const Size(0, 56),
+                    minimumSize: const Size(0, 52),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                      side: BorderSide(
-                        color: _pressedIndex == -1 ? scheme.onError : Colors.transparent,
-                        width: 4,
-                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    elevation: 0,
                   ),
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text('Retour'),
+                  icon: const Icon(Icons.arrow_back, size: 20),
+                  label: const Text('Retour', style: TextStyle(fontSize: 16)),
                 ),
               ),
               const SizedBox(width: 12),
@@ -94,24 +92,22 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: scheme.primary,
                     foregroundColor: scheme.onPrimary,
-                    minimumSize: const Size(0, 56),
+                    minimumSize: const Size(0, 52),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                      side: BorderSide(
-                        color: _pressedIndex == -2 ? scheme.onPrimary : Colors.transparent,
-                        width: 4,
-                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    elevation: 0,
                   ),
                   child: Text(
-                    canRepeat ? 'Répéter: ${widget.lastChar}' : 'Répéter',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    canRepeat ? widget.lastChar : '',
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -121,7 +117,6 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                 
                 // Calculate font size based on button size (larger when space allows)
                 final buttonHeight = (constraints.maxHeight - 12) / 2;
-                final buttonWidth = (constraints.maxWidth - 24) / 3;
                 final fontSize = (buttonHeight * 0.25).clamp(24.0, 48.0);
 
                 // Grid fills remaining height
@@ -129,8 +124,8 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
                     childAspectRatio: 2.8,
                   ),
                   itemCount: 6,
@@ -140,15 +135,22 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                     return ElevatedButton(
                       onPressed: ((_cooldownTimer?.isActive ?? false) || label.isEmpty) ? null : () => _cooldown(i, () => widget.onSelect(i)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: label.isEmpty ? scheme.surfaceVariant : scheme.secondary,
-                        foregroundColor: label.isEmpty ? scheme.onSurfaceVariant : scheme.onSecondary,
+                        backgroundColor: label.isEmpty 
+                            ? scheme.surfaceVariant.withOpacity(0.3)
+                            : scheme.secondary,
+                        foregroundColor: label.isEmpty 
+                            ? scheme.onSurfaceVariant.withOpacity(0.4)
+                            : scheme.onSecondary,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
+                          borderRadius: BorderRadius.circular(12),
                           side: BorderSide(
-                            color: isPressed ? scheme.onSecondary : Colors.transparent,
-                            width: 4,
+                            color: isPressed 
+                                ? scheme.primary.withOpacity(0.5)
+                                : Colors.transparent,
+                            width: 2,
                           ),
                         ),
+                        elevation: 0,
                       ),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
@@ -158,7 +160,7 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: fontSize,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
