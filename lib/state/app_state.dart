@@ -36,6 +36,7 @@ class AppState extends ChangeNotifier {
   List<Message> get savedMessages => _savedMessages;
 
   Future<void> initialize() async {
+    await _predictiveService.loadCustomDictionary();
     _savedMessages = await _messageRepository.loadAll();
     _predictiveService.indexSavedMessages(_savedMessages.map((m) => m.text));
     _refreshPredictions();

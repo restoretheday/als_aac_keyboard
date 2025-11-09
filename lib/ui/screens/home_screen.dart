@@ -40,6 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final orientation = MediaQuery.of(context).orientation;
+    final isLandscape = orientation == Orientation.landscape;
+    
     return Scaffold(
       backgroundColor: scheme.background,
       body: Stack(
@@ -47,65 +50,136 @@ class _HomeScreenState extends State<HomeScreen> {
           AnimatedBuilder(
             animation: appState,
             builder: (context, _) {
-              return Column(
-                children: [
-                  Flexible(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _MessageComposer(
-                            text: appState.currentText,
-                            onBackspace: appState.backspace,
-                            onClear: appState.clear,
-                            onSave: () async {
-                              await appState.saveCurrentMessage();
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Message enregistré')),
-                                );
-                              }
-                            },
-                            onSpeak: appState.speak,
-                            onShowMessages: () => setState(() => _showMessagesPanel = !_showMessagesPanel),
-                          ),
-                          const SizedBox(height: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: scheme.secondaryContainer,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: scheme.primary.withOpacity(0.15),
-                                width: 1,
+              if (isLandscape) {
+                // Landscape: side-by-side layout
+                return Row(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: _MessageComposer(
+                                text: appState.currentText,
+                                onBackspace: appState.backspace,
+                                onClear: appState.clear,
+                                onSave: () async {
+                                  await appState.saveCurrentMessage();
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Message enregistré')),
+                                    );
+                                  }
+                                },
+                                onSpeak: appState.speak,
+                                onShowMessages: () => setState(() => _showMessagesPanel = !_showMessagesPanel),
                               ),
                             ),
-                            child: PredictiveBar(
-                              predictions: appState.predictions,
-                              onAccept: appState.acceptPrediction,
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: scheme.secondaryContainer,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: scheme.primary.withOpacity(0.15),
+                                  width: 1,
+                                ),
+                              ),
+                              child: PredictiveBar(
+                                predictions: appState.predictions,
+                                onAccept: appState.acceptPrediction,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: SafeArea(
-                      top: false,
-                      child: BinaryKeyboard(
-                        labels: appState.currentBinaryChoices,
-                        onSelect: appState.advanceBinarySelection,
-                        onBack: appState.stepBackInBinarySelection,
-                        onRepeatLast: appState.repeatLastCharacter,
-                        lastChar: appState.lastCharacter,
+                    Flexible(
+                      flex: 3,
+                      child: SafeArea(
+                        top: false,
+                        left: false,
+                        child: BinaryKeyboard(
+                          labels: appState.currentBinaryChoices,
+                          onSelect: appState.advanceBinarySelection,
+                          onBack: appState.stepBackInBinarySelection,
+                          onRepeatLast: appState.repeatLastCharacter,
+                          lastChar: appState.lastCharacter,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              );
+                  ],
+                );
+              } else {
+                // Portrait: stacked layout
+                return Column(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: _MessageComposer(
+                                text: appState.currentText,
+                                onBackspace: appState.backspace,
+                                onClear: appState.clear,
+                                onSave: () async {
+                                  await appState.saveCurrentMessage();
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Message enregistré')),
+                                    );
+                                  }
+                                },
+                                onSpeak: appState.speak,
+                                onShowMessages: () => setState(() => _showMessagesPanel = !_showMessagesPanel),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: scheme.secondaryContainer,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: scheme.primary.withOpacity(0.15),
+                                  width: 1,
+                                ),
+                              ),
+                              child: PredictiveBar(
+                                predictions: appState.predictions,
+                                onAccept: appState.acceptPrediction,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 3,
+                      child: SafeArea(
+                        top: false,
+                        child: BinaryKeyboard(
+                          labels: appState.currentBinaryChoices,
+                          onSelect: appState.advanceBinarySelection,
+                          onBack: appState.stepBackInBinarySelection,
+                          onRepeatLast: appState.repeatLastCharacter,
+                          lastChar: appState.lastCharacter,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
             },
           ),
           // Messages panel overlay
@@ -184,13 +258,19 @@ class _MessageComposer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final orientation = MediaQuery.of(context).orientation;
+    final isLandscape = orientation == Orientation.landscape;
+    
     ButtonStyle filled(Color bg, Color fg) => ElevatedButton.styleFrom(
           backgroundColor: bg,
           foregroundColor: fg,
-          minimumSize: const Size(120, 48),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          minimumSize: Size(isLandscape ? 140 : 120, isLandscape ? 64 : 56),
+          padding: EdgeInsets.symmetric(
+            horizontal: isLandscape ? 20 : 16,
+            vertical: isLandscape ? 16 : 14,
+          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(10),
           ),
           elevation: 0,
         );
@@ -198,56 +278,60 @@ class _MessageComposer extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: scheme.surface,
-            border: Border.all(color: scheme.primary.withOpacity(0.2), width: 1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 28,
-              color: scheme.onSurface,
-              fontWeight: FontWeight.w400,
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.all(isLandscape ? 24 : 20),
+            decoration: BoxDecoration(
+              color: scheme.surface,
+              border: Border.all(color: scheme.primary.withOpacity(0.2), width: 1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SingleChildScrollView(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: isLandscape ? 32 : 28,
+                  color: scheme.onSurface,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 12,
+          runSpacing: 12,
           children: [
             ElevatedButton.icon(
               onPressed: onBackspace,
               style: filled(scheme.tertiary, scheme.onTertiary),
-              icon: const Icon(Icons.backspace_outlined),
-              label: const Text('Effacer'),
+              icon: Icon(Icons.backspace_outlined, size: isLandscape ? 28 : 24),
+              label: Text('Effacer', style: TextStyle(fontSize: isLandscape ? 18 : 16)),
             ),
             ElevatedButton.icon(
               onPressed: onClear,
               style: filled(scheme.error, scheme.onError),
-              icon: const Icon(Icons.clear),
-              label: const Text('Vider'),
+              icon: Icon(Icons.clear, size: isLandscape ? 28 : 24),
+              label: Text('Vider', style: TextStyle(fontSize: isLandscape ? 18 : 16)),
             ),
             ElevatedButton.icon(
               onPressed: onSpeak,
               style: filled(scheme.primary, scheme.onPrimary),
-              icon: const Icon(Icons.volume_up_outlined),
-              label: const Text('Parler'),
+              icon: Icon(Icons.volume_up_outlined, size: isLandscape ? 28 : 24),
+              label: Text('Parler', style: TextStyle(fontSize: isLandscape ? 18 : 16)),
             ),
             ElevatedButton.icon(
               onPressed: onSave,
               style: filled(scheme.secondary, scheme.onSecondary),
-              icon: const Icon(Icons.save_outlined),
-              label: const Text('Enregistrer'),
+              icon: Icon(Icons.save_outlined, size: isLandscape ? 28 : 24),
+              label: Text('Enregistrer', style: TextStyle(fontSize: isLandscape ? 18 : 16)),
             ),
             ElevatedButton.icon(
               onPressed: onShowMessages,
               style: filled(scheme.tertiaryContainer, scheme.onTertiaryContainer),
-              icon: const Icon(Icons.history),
-              label: const Text('Messages'),
+              icon: Icon(Icons.history, size: isLandscape ? 28 : 24),
+              label: Text('Messages', style: TextStyle(fontSize: isLandscape ? 18 : 16)),
             ),
           ],
         ),

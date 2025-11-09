@@ -67,15 +67,15 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: scheme.error,
                     foregroundColor: scheme.onError,
-                    minimumSize: const Size(0, 52),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    minimumSize: const Size(0, 64),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     elevation: 0,
                   ),
-                  icon: const Icon(Icons.arrow_back, size: 20),
-                  label: const Text('Retour', style: TextStyle(fontSize: 16)),
+                  icon: const Icon(Icons.arrow_back, size: 24),
+                  label: const Text('Retour', style: TextStyle(fontSize: 18)),
                 ),
               ),
               const SizedBox(width: 12),
@@ -92,8 +92,8 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: scheme.primary,
                     foregroundColor: scheme.onPrimary,
-                    minimumSize: const Size(0, 52),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    minimumSize: const Size(0, 64),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -101,7 +101,7 @@ class _BinaryKeyboardState extends State<BinaryKeyboard> {
                   ),
                   child: Text(
                     canRepeat ? widget.lastChar : '',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

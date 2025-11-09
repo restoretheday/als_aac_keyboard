@@ -1,8 +1,11 @@
+import 'package:flutter/services.dart';
+
 abstract class PredictiveService {
   List<String> predict(String currentText, {String locale = 'fr'});
   void observeTypedText(String text);
   void indexSavedMessages(Iterable<String> messages);
   String applyAutocomplete(String currentText, String word);
+  Future<void> loadCustomDictionary();
 }
 
 class InMemoryFrenchPredictiveService implements PredictiveService {
@@ -17,26 +20,52 @@ class InMemoryFrenchPredictiveService implements PredictiveService {
   List<String> predict(String currentText, {String locale = 'fr'}) {
     final lastToken = _lastToken(currentText).toLowerCase();
     final suggestions = <String>[];
+    final trimmedText = currentText.trimRight();
+    final endsWithSpace = currentText.endsWith(' ') || trimmedText.length < currentText.length;
     
-    // 1. Word completion: if typing a word, complete it
-    if (lastToken.isNotEmpty && !lastToken.endsWith(' ')) {
+    // 1. Word completion: if typing a word (not ending with space), complete it
+    if (lastToken.isNotEmpty && !endsWithSpace) {
       final completions = _frequency.keys
-          .where((w) => w.startsWith(lastToken))
+          .where((w) {
+            // Match if the dictionary entry starts with the token
+            // or if it's a multi-word entry where the first word starts with the token
+            if (w.startsWith(lastToken)) return true;
+            // For multi-word entries, check if first word matches
+            final firstWord = w.split(' ').first.toLowerCase();
+            return firstWord.startsWith(lastToken);
+          })
           .toList(growable: false)
         ..sort((a, b) => (_frequency[b] ?? 0).compareTo(_frequency[a] ?? 0));
       suggestions.addAll(completions.take(5));
     }
     
     // 2. Next word prediction: suggest common next words after last complete word
-    if (lastToken.isEmpty || currentText.endsWith(' ')) {
+    if (lastToken.isEmpty || endsWithSpace) {
       final lastCompleteWord = _lastCompleteWord(currentText).toLowerCase();
       if (lastCompleteWord.isNotEmpty && _nextWord.containsKey(lastCompleteWord)) {
         final nextWords = _nextWord[lastCompleteWord]!.entries.toList()
           ..sort((a, b) => b.value.compareTo(a.value));
         suggestions.addAll(nextWords.take(3).map((e) => e.key));
       }
-      // Also suggest common sentence starters
-      suggestions.addAll(_getCommonStarters());
+      // Also suggest common sentence starters (especially if no context)
+      if (lastCompleteWord.isEmpty || !_nextWord.containsKey(lastCompleteWord)) {
+        suggestions.addAll(_getCommonStarters());
+      }
+    }
+    
+    // 3. Fallback: if no suggestions yet and we have a partial word, try fuzzy matching
+    if (suggestions.isEmpty && lastToken.isNotEmpty && !endsWithSpace) {
+      // Try to find words that contain the token as a substring (not just prefix)
+      final fuzzyMatches = _frequency.keys
+          .where((w) => w.contains(lastToken) && w != lastToken)
+          .toList(growable: false)
+        ..sort((a, b) => (_frequency[b] ?? 0).compareTo(_frequency[a] ?? 0));
+      suggestions.addAll(fuzzyMatches.take(3));
+    }
+    
+    // 4. Final fallback: always show common starters if completely empty
+    if (suggestions.isEmpty) {
+      suggestions.addAll(_getCommonStarters().take(5));
     }
     
     // Remove duplicates and limit
@@ -94,11 +123,18 @@ class InMemoryFrenchPredictiveService implements PredictiveService {
   @override
   String applyAutocomplete(String currentText, String word) {
     final trimmed = currentText.trimRight();
+    
+    // If text ends with a space, we're starting a new word - just append
+    if (currentText.endsWith(' ') || trimmed.length < currentText.length) {
+      return trimmed.isEmpty ? '$word ' : '$trimmed $word ';
+    }
+    
+    // Otherwise, we're completing/replacing the last incomplete word
     final parts = trimmed.split(RegExp(r"\s+"));
-    if (parts.isEmpty) return word;
+    if (parts.isEmpty) return '$word ';
     parts.removeLast();
     final prefix = parts.isEmpty ? '' : parts.join(' ') + ' ';
-    return prefix + word + ' ';
+    return '$prefix$word ';
   }
 
   String _lastToken(String text) {
@@ -120,6 +156,26 @@ class InMemoryFrenchPredictiveService implements PredictiveService {
 
   List<String> _getCommonStarters() {
     return ['je', 'tu', 'il', 'elle', 'nous', 'vous', 'bonjour', 'merci', 'oui', 'non'];
+  }
+
+  @override
+  Future<void> loadCustomDictionary() async {
+    try {
+      final content = await rootBundle.loadString('data/custom_dictionary.txt');
+      final lines = content.split('\n')
+          .map((line) => line.trim())
+          .where((line) => line.isNotEmpty)
+          .toList();
+      
+      for (final word in lines) {
+        final key = word.toLowerCase();
+        // Add with higher frequency (15) so custom words are prioritized
+        _frequency[key] = (_frequency[key] ?? 0) + 15;
+      }
+    } catch (e) {
+      // If file doesn't exist or can't be loaded, continue without it
+      // This allows the app to work even if the dictionary file is missing
+    }
   }
 
   void _seed() {
