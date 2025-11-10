@@ -1,9 +1,0 @@
-2025/11/09-12:24:17.163 22b4 Reusing MANIFEST C:\Users\Vianney\AppData\Local\Temp\flutter_tools.4e9d48a7\flutter_tools_chrome_device.b89392e\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
-2025/11/09-12:24:17.166 22b4 Recovering log #10
-2025/11/09-12:24:17.173 22b4 Level-0 table #13: started
-2025/11/09-12:24:17.186 22b4 Level-0 table #13: 672604 bytes OK
-2025/11/09-12:24:17.187 22b4 Recovering log #13
-2025/11/09-12:24:17.188 22b4 Reusing old log C:\Users\Vianney\AppData\Local\Temp\flutter_tools.4e9d48a7\flutter_tools_chrome_device.b89392e\Default\EdgeCoupons/coupons_data.db/000013.log 
-2025/11/09-12:24:17.204 22b4 Delete type=0 #4
-2025/11/09-12:24:17.204 22b4 Delete type=0 #7
-2025/11/09-12:24:17.205 22b4 Delete type=0 #10
