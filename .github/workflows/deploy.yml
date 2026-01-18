@@ -28,7 +28,6 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
           channel: 'stable'
 
       - name: Install dependencies
@@ -38,7 +37,7 @@ jobs:
         run: flutter test
 
       - name: Build web app
-        run: flutter build web --release --base-href "/aac_keyboard/"
+        run: flutter build web --release --base-href "/als_aac_keyboard/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
