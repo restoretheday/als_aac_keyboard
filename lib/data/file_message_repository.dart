@@ -20,7 +20,18 @@ class FileMessageRepository implements MessageRepository {
   @override
   Future<void> save(Message message) async {
     final current = await loadAll();
-    final updated = [...current, message];
+    // Remove duplicates before adding
+    final withoutDuplicates = current.where((m) => m.text != message.text).toList();
+    final updated = [...withoutDuplicates, message];
+    await _storage.writeJson({
+      'messages': updated.map((m) => m.toJson()).toList(),
+    });
+  }
+
+  @override
+  Future<void> delete(Message message) async {
+    final current = await loadAll();
+    final updated = current.where((m) => m.id != message.id).toList();
     await _storage.writeJson({
       'messages': updated.map((m) => m.toJson()).toList(),
     });

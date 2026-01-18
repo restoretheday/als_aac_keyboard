@@ -1,9 +1,17 @@
-2025/11/09-12:44:17.527 3b34 Reusing MANIFEST C:\Users\Vianney\AppData\Local\Temp\flutter_tools.729eb01e\flutter_tools_chrome_device.b0ef314c\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
-2025/11/09-12:44:17.531 3b34 Recovering log #13
-2025/11/09-12:44:17.533 3b34 Reusing old log C:\Users\Vianney\AppData\Local\Temp\flutter_tools.729eb01e\flutter_tools_chrome_device.b0ef314c\Default\EdgeCoupons/coupons_data.db/000013.log 
-2025/11/09-12:44:17.536 3b34 Delete type=0 #4
-2025/11/09-12:44:17.536 3b34 Delete type=0 #7
-2025/11/09-12:44:17.538 3b34 Delete type=0 #10
-2025/11/09-13:19:56.072 e84 Level-0 table #16: started
-2025/11/09-13:19:56.088 e84 Level-0 table #16: 672627 bytes OK
-2025/11/09-13:19:56.096 e84 Delete type=0 #13
+2026/01/18-21:33:50.006 7d84 Reusing MANIFEST C:\Users\Vianney\AppData\Local\Temp\flutter_tools.9ba275a7\flutter_tools_chrome_device.62c63fe\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2026/01/18-21:33:50.016 7d84 Recovering log #23
+2026/01/18-21:33:50.016 7d84 Reusing old log C:\Users\Vianney\AppData\Local\Temp\flutter_tools.9ba275a7\flutter_tools_chrome_device.62c63fe\Default\EdgeCoupons/coupons_data.db/000023.log 
+2026/01/18-21:33:50.026 7d84 Delete type=0 #3
+2026/01/18-21:33:50.026 7d84 Delete type=0 #4
+2026/01/18-21:33:50.026 7d84 Delete type=0 #7
+2026/01/18-21:33:50.026 7d84 Delete type=2 #8
+2026/01/18-21:33:50.027 7d84 Delete type=0 #10
+2026/01/18-21:33:50.027 7d84 Delete type=2 #11
+2026/01/18-21:33:50.027 7d84 Delete type=0 #13
+2026/01/18-21:33:50.028 7d84 Delete type=2 #14
+2026/01/18-21:33:50.028 7d84 Delete type=0 #16
+2026/01/18-21:33:50.028 7d84 Delete type=2 #17
+2026/01/18-21:33:50.028 7d84 Delete type=0 #19
+2026/01/18-21:33:50.336 1a6c Level-0 table #27: started
+2026/01/18-21:33:50.345 1a6c Level-0 table #27: 681440 bytes OK
+2026/01/18-21:33:50.350 1a6c Delete type=0 #23

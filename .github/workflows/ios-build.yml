@@ -1,0 +1,53 @@
+name: Build iOS App
+
+on:
+  workflow_dispatch:  # Allows manual triggering
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build iOS app (unsigned)
+        run: |
+          flutter build ipa --release --no-tree-shake-icons
+        continue-on-error: true  # May fail without signing, that's OK
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        if: success() || failure()  # Upload even if build had issues
+        with:
+          name: ios-ipa
+          path: build/ios/ipa/*.ipa
+          retention-days: 30
+
+      - name: Build status
+        if: failure()
+        run: |
+          echo "⚠️ Build may have failed due to code signing."
+          echo "💡 Tip: Use EAS Build or Codemagic for automatic signing!"
+          echo "💡 Or use AltStore to sign the app when installing."
+
+
+
+
+

@@ -1,0 +1,38 @@
+{
+    "name": "ALS Binary Keyboard",
+    "short_name": "AAC Keyboard",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#4A90E2",
+    "theme_color": "#4A90E2",
+    "description": "Offline AAC keyboard app with 6-button binary keyboard and text-to-speech",
+    "orientation": "any",
+    "prefer_related_applications": false,
+    "scope": ".",
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

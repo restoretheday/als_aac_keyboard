@@ -12,7 +12,7 @@ class KeyboardNavigator {
   final List<List<String>> _stack = <List<String>>[];
 
   static const String kDefaultLetters = "abcdefghijklmnopqrstuvwxyz";
-  static const String kDefaultSpecials = "+- .,"; // limited set
+  static const String kDefaultSpecials = ".,?éàè"; // limited set with French accents (space removed, now has dedicated button)
 
   List<String> get currentChoices {
     final groups = currentGroups;
@@ -48,9 +48,20 @@ class KeyboardNavigator {
   void _buildInitialGroups() {
     final letterList = _letters.split('');
     final specialsList = _specials.split('');
-    // Create 5 groups from letters (roughly even), and 1 group for specials
-    final letterGroups = _splitIntoN(letterList, 5);
-    _initialGroups = [...letterGroups, specialsList];
+    final groups = <List<String>>[];
+    if (letterList.length >= 26) {
+      // Standard alphabet: make last group containing uvwxyz bigger
+      groups.add(letterList.sublist(0, 5)); // abcde (5 - smaller)
+      groups.add(letterList.sublist(5, 10)); // fghij (5 - smaller)
+      groups.add(letterList.sublist(10, 15)); // klmno (5 - smaller)
+      groups.add(letterList.sublist(15, 20)); // pqrst (5 - smaller)
+      groups.add(letterList.sublist(20)); // uvwxyz (6 letters - bigger)
+    } else {
+      // Fallback for non-standard alphabets
+      final letterGroups = _splitIntoN(letterList, 5);
+      groups.addAll(letterGroups);
+    }
+    _initialGroups = [...groups, specialsList];
   }
 
   static List<List<String>> _splitIntoSix(List<String> source) {

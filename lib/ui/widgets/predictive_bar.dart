@@ -19,30 +19,35 @@ class PredictiveBar extends StatelessWidget {
     final primary = hasAny ? predictions.first : '';
     final others = hasAny ? predictions.skip(1).toList() : const <String>[];
 
+    final chipTextSize = isLandscape ? 22.0 : 20.0;
+    final chipPaddingH = isLandscape ? 18.0 : 16.0;
+    final chipPaddingV = isLandscape ? 16.0 : 14.0;
+
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Wrap(
-            spacing: 10,
-            runSpacing: 8,
+            spacing: 12,
+            runSpacing: 10,
             children: hasAny
                 ? others
                     .map((w) => ActionChip(
                           label: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
                             child: Text(
                               w,
                               style: TextStyle(
-                                fontSize: isLandscape ? 18 : 16,
-                                fontWeight: FontWeight.w500,
+                                fontSize: chipTextSize,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
                           onPressed: () => onAccept(w),
-                          backgroundColor: scheme.surfaceVariant,
+                          backgroundColor: scheme.surfaceContainerHighest,
                           padding: EdgeInsets.symmetric(
-                            horizontal: isLandscape ? 16 : 12,
-                            vertical: isLandscape ? 12 : 10,
+                            horizontal: chipPaddingH,
+                            vertical: chipPaddingV,
                           ),
                         ))
                     .toList()
@@ -51,32 +56,33 @@ class PredictiveBar extends StatelessWidget {
                       'Suggestions',
                       style: TextStyle(
                         color: scheme.onSecondaryContainer.withOpacity(0.7),
-                        fontSize: isLandscape ? 18 : 16,
+                        fontSize: chipTextSize,
                       ),
                     )
                   ],
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         ElevatedButton(
           onPressed: hasAny ? () => onAccept(primary) : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: scheme.primary,
             foregroundColor: scheme.onPrimary,
-            minimumSize: Size(isLandscape ? 200 : 180, isLandscape ? 64 : 60),
+            minimumSize: Size(isLandscape ? 240 : 220, isLandscape ? 120 : 100),
             padding: EdgeInsets.symmetric(
-              horizontal: isLandscape ? 24 : 20,
-              vertical: isLandscape ? 16 : 14,
+              horizontal: isLandscape ? 28 : 24,
+              vertical: isLandscape ? 26 : 22,
             ),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
           child: Text(
             hasAny ? primary : 'Accepter',
             style: TextStyle(
-              fontSize: isLandscape ? 22 : 20,
-              fontWeight: FontWeight.bold,
+              fontSize: isLandscape ? 28 : 26,
+              fontWeight: FontWeight.w800,
+              height: 1.05,
             ),
           ),
         ),

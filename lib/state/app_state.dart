@@ -3,6 +3,7 @@ import '../domain/entities/message.dart';
 import '../domain/services/predictive_service.dart';
 import '../domain/services/tts_service.dart';
 import '../domain/services/keyboard_navigator.dart';
+import '../domain/services/precanned_navigator.dart';
 import '../domain/repositories/message_repository.dart';
 
 class AppState extends ChangeNotifier {
@@ -10,15 +11,18 @@ class AppState extends ChangeNotifier {
     required PredictiveService predictiveService,
     required TtsService ttsService,
     required KeyboardNavigator keyboardNavigator,
+    required PrecannedNavigator precannedNavigator,
     required MessageRepository messageRepository,
   })  : _predictiveService = predictiveService,
         _ttsService = ttsService,
         _keyboardNavigator = keyboardNavigator,
+        _precannedNavigator = precannedNavigator,
         _messageRepository = messageRepository;
 
   final PredictiveService _predictiveService;
   final TtsService _ttsService;
   final KeyboardNavigator _keyboardNavigator;
+  final PrecannedNavigator _precannedNavigator;
   final MessageRepository _messageRepository;
 
   String _currentText = '';
@@ -77,6 +81,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> saveCurrentMessage() async {
+    if (_currentText.trim().isEmpty) return; // Don't save empty messages
     final message = Message(text: _currentText, createdAt: DateTime.now());
     await _messageRepository.save(message);
     _savedMessages = await _messageRepository.loadAll();
@@ -112,6 +117,54 @@ class AppState extends ChangeNotifier {
 
   void stepBackInBinarySelection() {
     _keyboardNavigator.stepBack();
+    notifyListeners();
+  }
+
+  void addSpace() {
+    _currentText += ' ';
+    _predictiveService.observeTypedText(_currentText);
+    _refreshPredictions();
+    notifyListeners();
+  }
+
+  List<String> get currentPrecannedChoices => _precannedNavigator.currentChoices;
+  PrecannedResult? _lastPrecannedResult;
+  PrecannedResult? get lastPrecannedResult => _lastPrecannedResult;
+  
+  void advancePrecannedSelection(int index) {
+    final result = _precannedNavigator.advance(index);
+    _lastPrecannedResult = result;
+    if (result != null) {
+      if (result.type == PrecannedResultType.sentence) {
+        _currentText = result.text;
+        _predictiveService.observeTypedText(_currentText);
+        _refreshPredictions();
+      }
+      _precannedNavigator.reset();
+    }
+    notifyListeners();
+  }
+
+  void clearPrecannedResult() {
+    _lastPrecannedResult = null;
+  }
+
+  void stepBackInPrecannedSelection() {
+    _precannedNavigator.stepBack();
+    notifyListeners();
+  }
+
+  Future<void> deleteMessage(Message message) async {
+    await _messageRepository.delete(message);
+    _savedMessages = await _messageRepository.loadAll();
+    _predictiveService.indexSavedMessages(_savedMessages.map((m) => m.text));
+    notifyListeners();
+  }
+
+  void setCurrentText(String text) {
+    _currentText = text;
+    _predictiveService.observeTypedText(_currentText);
+    _refreshPredictions();
     notifyListeners();
   }
 

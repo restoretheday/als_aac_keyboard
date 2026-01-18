@@ -138,7 +138,8 @@ class InMemoryFrenchPredictiveService implements PredictiveService {
   }
 
   String _lastToken(String text) {
-    final match = RegExp(r"([\p{L}']+)$", unicode: true).firstMatch(text);
+    // Use a basic Latin + extended accents range to avoid platform-specific regex issues.
+    final match = RegExp(r"([A-Za-zÀ-ÖØ-öø-ÿ']+)$").firstMatch(text);
     if (match == null) return '';
     return match.group(1) ?? '';
   }

@@ -1,5 +1,6 @@
 {
    "ArbitrationSignal": "notification_nsat_upper_ci-0.7",
+   "CopilotModeBypass": [ "cd4688a9-e888-48ea-ad81-76193d56b1be.IsVideoPage.Bubble", "cd4688a9-e888-48ea-ad81-76193d56b1be.IsKnowledgeCardQuery.Bubble", "PerformanceDetectorFeatureNotification", "AUTOFILL_PASSWORD_NON_FUNCTIONAL_FLYOUTS", "SHOPPING_AUTO_SHOW_LOWER_PRICE_FOUND", "SHOPPING_AUTO_SHOW_REBATES", "SHOPPING_AUTO_SHOW_REBATES_CONFIRMATION", "SHOPPING_AUTO_SHOW_REBATES_ORGANIC", "SHOPPING_AUTO_SHOW_REBATES_ORGANIC_NEW" ],
    "CustomSuppressionPolicies": {
       "8682d0fa-50b3-4ece-aa5b-e0b33f9919e2.f5b8c725-cb2e-4c12-accd-73e500d88d47.AutoOpen": {
          "notification_max_quick_dismiss_count": 3
@@ -155,6 +156,9 @@
          "cd4688a9-e888-48ea-ad81-76193d56b1be.AutoOpen.PersistentChat": 1,
          "cd4688a9-e888-48ea-ad81-76193d56b1be.Bubble": 1,
          "cd4688a9-e888-48ea-ad81-76193d56b1be.IsCompeteAISite.Bubble": 1,
+         "cd4688a9-e888-48ea-ad81-76193d56b1be.IsCopilotJitEduAcademicAI.Bubble": 1,
+         "cd4688a9-e888-48ea-ad81-76193d56b1be.IsCopilotJitEduArticleAI.Bubble": 1,
+         "cd4688a9-e888-48ea-ad81-76193d56b1be.IsCopilotJitEduStudyAI.Bubble": 1,
          "cd4688a9-e888-48ea-ad81-76193d56b1be.IsKnowledgeCardQuery.Bubble": 1,
          "cd4688a9-e888-48ea-ad81-76193d56b1be.IsMsnArticleUrlFromNtpP1P2.Bubble": 1,
          "cd4688a9-e888-48ea-ad81-76193d56b1be.IsShoppingNotificationNudge.Bubble": 1,
@@ -188,6 +192,6 @@
    },
    "SuppressedExperiences": [  ],
    "TimeDelta": 5000000,
-   "baseConfigVersion": "32.0.3",
-   "configVersion": "32.0.3"
+   "baseConfigVersion": "36.0.1",
+   "configVersion": "36.0.1"
 }

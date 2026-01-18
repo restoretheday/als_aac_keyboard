@@ -16,30 +16,29 @@ class MessageList extends StatelessWidget {
     if (messages.isEmpty) {
       return const Center(child: Text('No saved messages yet'));
     }
+    final scheme = Theme.of(context).colorScheme;
     return ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: messages.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
+      separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
         final msg = messages[index];
-        return ListTile(
-          title: Text(
-            msg.text,
-            style: const TextStyle(fontSize: 20),
+        return ElevatedButton(
+          onPressed: () => onTapWord(msg.text),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: scheme.secondaryContainer,
+            foregroundColor: scheme.onSecondaryContainer,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 0,
           ),
-          subtitle: Text(
-            msg.createdAt.toLocal().toString(),
-            style: const TextStyle(fontSize: 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              msg.text,
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w500, height: 1.2),
+            ),
           ),
-          onTap: () {
-            // Quick-add the most frequent word-like token (simple: first word)
-            final firstWord = msg.text.split(RegExp(r"\s+")).firstWhere(
-                  (e) => e.isNotEmpty,
-                  orElse: () => '',
-                );
-            if (firstWord.isNotEmpty) {
-              onTapWord(firstWord);
-            }
-          },
         );
       },
     );
